@@ -1,4 +1,4 @@
-package MazeSolver;
+package DataStructures;
 
 /**
  * @author Miroslav Lukac

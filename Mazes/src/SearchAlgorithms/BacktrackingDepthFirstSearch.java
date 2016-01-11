@@ -1,60 +1,47 @@
 package SearchAlgorithms;
 
 import java.util.Stack;
-import MazeSolver.Graph;
+import DataStructures.Graph;
 
 public class BacktrackingDepthFirstSearch {
-	    private boolean[] onPath;        // vertices in current path
-	    private Stack<Integer> path;     // the current path
-	    private int numberOfPaths;       // number of simple path
+	    private boolean[] verticesOnPath;        // vertices in current path
+	    private Stack<Integer> currentPath;     // the current path
+	    private final int start = 0;
+	    private final int end = 1;
 
-	    // show all simple paths from s to t - use DFS
-	    public BacktrackingDepthFirstSearch(Graph G, int s, int t) {
-	        onPath = new boolean[G.Vertices()];
-	        path   = new Stack<Integer>();
-	        dfs(G, s, t);
+	    public BacktrackingDepthFirstSearch(Graph graph) {
+	        verticesOnPath = new boolean[graph.Vertices()];
+	    	currentPath   = new Stack<Integer>();
+	        dfs(graph, start, end);
 	    }
 
-	    // use DFS
-	    private void dfs(Graph G, int v, int t) {
+	    private void dfs(Graph graph, int from, int to) {
+	    	currentPath.push(from);
+	        verticesOnPath[from] = true;
 
-	        // add v to current path
-	        path.push(v);
-	        onPath[v] = true;
-
-	        // found path from s to t
-	        if (v == t) {
-	            processCurrentPath();
-	            numberOfPaths++;
+	        // found path from start to end
+	        if (from == to) {
+	            printCurrentPath();
 	        }
-
-	        // consider all neighbors that would continue path with repeating a node
 	        else {
-	            for (int w : G.neighbors(v)) {
-	                if (!onPath[w])
-	                    dfs(G, w, t);
+	            for (int neighbor : graph.neighbors(from)) {
+	                if (!verticesOnPath[neighbor])
+	                    dfs(graph, neighbor, to);
 	            }
 	        }
 
-	        // done exploring from v, so remove from path
-	        path.pop();
-	        onPath[v] = false;
+	        currentPath.pop();
+	        verticesOnPath[from] = false;
 	    }
 
-	    // this implementation just prints the path to standard output
-	    private void processCurrentPath() {
-	        Stack<Integer> reverse = new Stack<Integer>();
-	        for (int v : path)
-	            reverse.push(v);
-	        if (reverse.size() >= 1)
-	            System.out.print(reverse.pop());
-	        while (!reverse.isEmpty())
-	        	System.out.print("-" + reverse.pop());
-	        System.out.println();
-	    }
-
-	    // return number of simple paths between s and t
-	    public int numberOfPaths() {
-	        return numberOfPaths;
+	    private void printCurrentPath() {
+	        String output = "";
+	        
+	        for (int x : currentPath){
+	        	if(x == end) output += x; 
+	        	else output += x + "->";
+	        }
+	        
+	        System.out.println(output);
 	    }
 }

@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import DataStructures.IntTuple;
+
 public class MazeFileReader {
 	private Path filePath;
-	private int startIndex;
 	private int verticesCount;
 	
 	public MazeFileReader(String fileName) throws IOException {
@@ -27,15 +28,10 @@ public class MazeFileReader {
 		List<String> lines = Files.readAllLines(this.filePath, charset);
 		
 		// Count 
-		
 		List<IntTuple> result = new ArrayList<IntTuple>();
-		
-		int i = 0;
-		
-		
+				
 		for(Iterator<String> j = lines.iterator(); j.hasNext();){
 			String current = j.next();
-			
 			
 			// Skipping empty strings
 			// if(!current.isEmpty()) continue;
@@ -48,14 +44,7 @@ public class MazeFileReader {
 			int foo = Integer.parseInt(first);
 			int goo = Integer.parseInt(second);
 			
-			if(foo == 1)
-			{
-				this.startIndex = i;
-			}
-			
-			verticesCount = Math.max(verticesCount, Math.max(foo,goo));
-						
-			i++;			
+			verticesCount = Math.max(verticesCount, Math.max(foo,goo));			
 			IntTuple relation = new IntTuple(foo,goo);
 			result.add(relation);
 		}
@@ -67,9 +56,5 @@ public class MazeFileReader {
 	
 	public int getVerticesCount(){
 		return this.verticesCount;
-	}
-	
-	public int getStartIndex(){
-		return this.startIndex;
 	}
 }

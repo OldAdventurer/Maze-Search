@@ -1,4 +1,4 @@
-package MazeSolver;
+package DataStructures;
 
 public class Graph {
 	private final int Vertices;

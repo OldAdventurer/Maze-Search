@@ -3,45 +3,49 @@ package MazeSolver;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
-import MazeSolver.IntTuple;
+
+import DataStructures.Graph;
+import DataStructures.IntTuple;
 import SearchAlgorithms.BacktrackingDepthFirstSearch;
 import SearchAlgorithms.DepthFirstSearch;
 
 public class MazeSolver {
 	private static int verticesCount;
-	private static int startIndex;
-		
+    	
 	public static void main(String[] args){
 		final String dir = System.getProperty("user.dir");
 		
-		System.out.println("---Maze Solver---");
-		System.out.print("Insert file name: ");
+		while(true){
+			try{
+				System.out.println("---Maze Solver---");
+				System.out.print("Insert file name (eg. maze1.txt): ");
+				
+				Scanner sc = new Scanner(System.in);
+				String fileName = sc.next();
+				fileName = dir + "\\bin\\Mazes\\" + fileName;
+				
+				System.out.print("Generate all solutions? (Y/N): ");
+				String all = sc.next();
+				
+				boolean generateAllSolutions = false;
+				
+				if(all.equals("y"))
+				{
+					generateAllSolutions = true;
+				}
+				
+				List<IntTuple> maze = LoadMazeFile(fileName);
 		
-		Scanner sc = new Scanner(System.in);
-		//String fileName = sc.next();
-		String fileName = dir + "\\bin\\Mazes\\maze1.txt";
+				Graph graph = InitializeGraph(maze);
 		
-		System.out.print("Generate all solutions? (Y/N): ");
-		String all = sc.next();
-		
-		boolean generateAllSolutions = false;
-		
-		if(all.equals("y"))
-		{
-			generateAllSolutions = true;
+				if(!generateAllSolutions) RunDfs(graph);
+				else RunBacktrackingDfs(graph);
+			} catch(Exception e){
+				System.out.println("Please start again");	
+			}
+			
+			System.out.println("END\n");			
 		}
-		
-		List<IntTuple> maze = LoadMazeFile(fileName);
-		
-		if(maze == null || verticesCount <= 0 || startIndex < 0) {
-			System.out.println("Invalid maze file!");
-			return;
-		}
-		
-		Graph graph = InitializeGraph(maze);
-
-		if(!generateAllSolutions) RunDfs(graph);
-		else RunBacktrackingDfs(graph);
 	}	
 	
 	private static void RunDfs(Graph graph){
@@ -55,10 +59,9 @@ public class MazeSolver {
 	}
 	
 	private static void RunBacktrackingDfs(Graph graph){
-		System.out.println("all simple paths between 0 and 1:");
+		System.out.println("Solution: ");
 		
-		BacktrackingDepthFirstSearch dfs = new BacktrackingDepthFirstSearch(graph, 0, 1);
-		System.out.println("# paths = " + dfs.numberOfPaths());
+		BacktrackingDepthFirstSearch dfs = new BacktrackingDepthFirstSearch(graph);
 	}
 	
 	private static Graph InitializeGraph(List<IntTuple> maze){
@@ -78,12 +81,10 @@ public class MazeSolver {
 		try{			
 			MazeFileReader reader = new MazeFileReader(path);
 			maze = reader.readMaze();
-			 
-			startIndex = reader.getStartIndex();
 			verticesCount = reader.getVerticesCount();
 		} catch(IOException e){
-			System.out.println("Error occured! - error message: ");
-			e.printStackTrace();
+			System.out.println(e);
+			
 		}
 		
 		return maze;

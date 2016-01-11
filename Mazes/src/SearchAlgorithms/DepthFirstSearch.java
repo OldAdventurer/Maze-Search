@@ -1,14 +1,12 @@
 package SearchAlgorithms;
 
-import MazeSolver.Graph;
-import MazeSolver.IntegerBag;
-
-import java.util.Stack;
+import DataStructures.Graph;
+import DataStructures.IntegerBag;
 
 public class DepthFirstSearch {
 	private boolean[] marked; // marked[v] = is there an s-v path?
 	private int[] edgeTo; // edgeTo[v] = last edge on s-v path
-	private final int start = 0; // source vertex
+	private final int start = 0;
 	private final int end = 1;
 	
 	public DepthFirstSearch(Graph graph){
@@ -17,19 +15,19 @@ public class DepthFirstSearch {
 		depthFirstSearch(graph, start);
 	}
 	
-	private void depthFirstSearch(Graph graph, int v){
-		marked[v] = true;
+	private void depthFirstSearch(Graph graph, int from){
+		marked[from] = true;
 		
-		for(int w : graph.neighbors(v)){
-			if(!marked[w]){
-				edgeTo[w] = v;
-				depthFirstSearch(graph, w);
+		for(int neighbor : graph.neighbors(from)){
+			if(!marked[neighbor]){
+				edgeTo[neighbor] = from;
+				depthFirstSearch(graph, neighbor);
 			}
 		}
 	}
 	
-	public boolean pathExists(int v){
-		return marked[v];
+	public boolean pathExists(int from){
+		return marked[from];
 	}
 	
 	public Iterable<Integer> solveMaze(){
